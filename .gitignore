@@ -1,0 +1,7 @@
+*.pdf
+*.csv
+*.dat
+*.swp
+*.tar.gz
+__pycache__/*
+
