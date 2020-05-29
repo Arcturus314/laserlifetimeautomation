@@ -1,6 +1,7 @@
 #define LEDON 1       // each led is on for this many seconds during sampling
 #define SAMPLETIME 60 // total time for one sample - delay iteration
-#define NUMLEDS 8    // will break if >12
+#define NUMLEDS 8     // will break if >12
+#define NUMSAMPLES 10 // number of voltage samples averaged together for each LED measurement
 
 // 10 LEDs on pins 2 -> NUMLEDS+2
 int photodiodePin = A0;
@@ -23,7 +24,15 @@ void loop() {
   for (int lednum = 0; lednum < NUMLEDS; lednum++) {
     digitalWrite(lednum+2, LOW);
     delay(LEDON*1000);
-    Serial.print(String(5*float(analogRead(photodiodePin))/1023));
+
+    // average NUMSAMPLES vals
+    float adcSum = 0;
+    for (int samplenum = 0; samplenum < NUMSAMPLES; samplenum++) {
+      adcSum += float(analogRead(photodiodePin));
+    }
+    adcSum /= NUMSAMPLES;
+    
+    Serial.print(String(5*adcSum/1023));
     if (lednum < NUMLEDS-1) Serial.print(",");
     digitalWrite(lednum+2, HIGH);
   }
